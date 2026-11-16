@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Mundo Gamer</title>
+<style>
+:root {
+  --bg: #f5f4fb; --surface: #ffffff; --text: #1b1b2f; --muted: #5d5d78;
+  --accent: #6c3df4; --accent-text: #ffffff; --border: #dcdaf0;
+  box-sizing: border-box;
+  padding-top: env(safe-area-inset-top, 0px);
+  padding-bottom: env(safe-area-inset-bottom, 0px);
+}
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    --bg: #12121c; --surface: #1c1c2b; --text: #ececf7; --muted: #a2a2bd;
+    --accent: #9a7bff; --accent-text: #12121c; --border: #2d2d44;
+  }
+}
+:root[data-theme="dark"] {
+  --bg: #12121c; --surface: #1c1c2b; --text: #ececf7; --muted: #a2a2bd;
+  --accent: #9a7bff; --accent-text: #12121c; --border: #2d2d44;
+}
+* { box-sizing: border-box; }
+body { margin: 0; background: var(--bg); color: var(--text); font-family: system-ui, -apple-system, "Segoe UI", Roboto, sans-serif; line-height: 1.5; }
+header { text-align: center; padding: 3rem 1rem 2rem; }
+header h1 { margin: 0; font-size: clamp(2rem, 6vw, 3.2rem); color: var(--accent); }
+header p { color: var(--muted); max-width: 40rem; margin: .75rem auto 0; }
+main { max-width: 60rem; margin: 0 auto; padding: 0 1rem 3rem; }
+.filtros { display: flex; flex-wrap: wrap; gap: .5rem; justify-content: center; margin: 1rem 0 2rem; }
+.filtros button { border: 1px solid var(--border); background: var(--surface); color: var(--text); padding: .5rem 1rem; border-radius: 999px; cursor: pointer; font: inherit; }
+.filtros button.activo { background: var(--accent); color: var(--accent-text); border-color: var(--accent); }
+.grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(15rem, 1fr)); gap: 1rem; }
+.card { background: var(--surface); border: 1px solid var(--border); border-radius: 12px; padding: 1.25rem; }
+.card .emoji { font-size: 2rem; }
+.card h2 { margin: .5rem 0 .25rem; font-size: 1.15rem; }
+.card .genero { display: inline-block; font-size: .8rem; color: var(--accent); font-weight: 600; margin-bottom: .5rem; }
+.card p { margin: 0; color: var(--muted); font-size: .95rem; }
+footer { text-align: center; color: var(--muted); padding: 1.5rem 1rem 2rem; border-top: 1px solid var(--border); font-size: .9rem; }
+</style>
+</head>
+<body>
+<header>
+  <h1>🎮 Mundo Gamer</h1>
+  <p>Una pequeña selección de videojuegos para todos los gustos. Filtra por género y encuentra tu próximo vicio.</p>
+</header>
+<main>
+  <div class="filtros" id="filtros">
+    <button class="activo" data-g="todos">Todos</button>
+    <button data-g="Aventura">Aventura</button>
+    <button data-g="Deportes">Deportes</button>
+    <button data-g="Sandbox">Sandbox</button>
+    <button data-g="Acción">Acción</button>
+  </div>
+  <section class="grid" id="lista"></section>
+</main>
+<footer>Hecha con HTML, CSS y JavaScript · Mundo Gamer</footer>
+<script>
+const juegos = [
+  { n: "The Legend of Zelda: Breath of the Wild", g: "Aventura", e: "🗡️", d: "Explora un enorme mundo abierto lleno de secretos y puzles." },
+  { n: "EA Sports FC", g: "Deportes", e: "⚽", d: "El fútbol en consola y PC, con modos online y Ultimate Team." },
+  { n: "Minecraft", g: "Sandbox", e: "⛏️", d: "Construye, sobrevive y deja volar la imaginación con bloques." },
+  { n: "Elden Ring", g: "Acción", e: "🔥", d: "Un desafiante RPG de acción en un mundo oscuro y misterioso." },
+  { n: "NBA 2K", g: "Deportes", e: "🏀", d: "Baloncesto realista con carrera de jugador y partidos online." },
+  { n: "Terraria", g: "Sandbox", e: "🌳", d: "Excava, lucha contra jefes y crea tu propio mundo en 2D." },
+  { n: "Uncharted 4", g: "Aventura", e: "🧭", d: "Una aventura cinematográfica de tesoros, escalada y acción." },
+  { n: "Doom Eternal", g: "Acción", e: "💥", d: "Disparos frenéticos y a toda velocidad contra hordas de demonios." }
+];
+const lista = document.getElementById("lista");
+function pintar(filtro) {
+  lista.innerHTML = "";
+  juegos.filter(j => filtro === "todos" || j.g === filtro).forEach(j => {
+    const c = document.createElement("article");
+    c.className = "card";
+    c.innerHTML = '<div class="emoji">' + j.e + '</div><h2>' + j.n + '</h2><span class="genero">' + j.g + '</span><p>' + j.d + '</p>';
+    lista.appendChild(c);
+  });
+}
+document.getElementById("filtros").addEventListener("click", e => {
+  const b = e.target.closest("button");
+  if (!b) return;
+  document.querySelectorAll(".filtros button").forEach(x => x.classList.remove("activo"));
+  b.classList.add("activo");
+  pintar(b.dataset.g);
+});
+pintar("todos");
+</script>
+</body>
+</html>
